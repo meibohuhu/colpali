@@ -48,6 +48,8 @@ class ColQwen2_5(Qwen2_5_VLForConditionalGeneration):  # noqa: N801
             if pixel_values is not None:
                 pixel_values = pixel_values.type(self.visual.dtype)
                 image_embeds = self.visual(pixel_values, grid_thw=image_grid_thw)
+                ## MHU
+                ## Spectial tokens in the input sequence, such as image tokens, are replaced with their corresponding embeddings.
                 image_mask = (input_ids == self.config.image_token_id).unsqueeze(-1).expand_as(inputs_embeds)
                 image_embeds = image_embeds.to(inputs_embeds.device, inputs_embeds.dtype)
                 inputs_embeds = inputs_embeds.masked_scatter(image_mask, image_embeds)
@@ -87,13 +89,19 @@ class ColQwen2_5(Qwen2_5_VLForConditionalGeneration):  # noqa: N801
                 [pixel_sequence[:offset] for pixel_sequence, offset in zip(kwargs["pixel_values"], offsets)],
                 dim=0,
             )
-
+## MHU
+## Positional encoding helps the model understand token order
         position_ids, rope_deltas = self.get_rope_index(
             input_ids=kwargs["input_ids"],
             image_grid_thw=kwargs.get("image_grid_thw", None),
             video_grid_thw=None,
             attention_mask=kwargs.get("attention_mask", None),
         )
+## MHU
+### Calls inner_forward, which:
+### 1. Embeds text tokens and images.
+### 2. Inserts image embeddings into the token sequence at the correct positions.
+### 3. Runs the backbone model to get hidden states
         last_hidden_states = self.inner_forward(
             *args,
             **kwargs,

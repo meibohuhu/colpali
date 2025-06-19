@@ -94,7 +94,7 @@ class ColModelTraining:
             eval_dataset=self.eval_dataset,
             args=self.config.tr_args,
             data_collator=self.collator,
-            loss_func=self.config.loss_func,
+            loss_func=self.config.loss_func,    ## MHU ### The ColbertLoss (or similar) is used to optimize the model for this objective.
             is_vision_model=self.config.processor is not None,
         )
 

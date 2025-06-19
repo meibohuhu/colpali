@@ -13,7 +13,11 @@ def concat_all_gather(t: torch.Tensor) -> torch.Tensor:
         return torch.cat(all_gather(t), dim=0)  # keeps grad graph
     return t
 
-
+'''
+MHU
+Contrastive learning (not "constructive learning") is a training approach where the model learns to bring similar pairs 
+closer together and push dissimilar pairs further apart in the embedding space.
+'''
 class ContrastiveTrainer(Trainer):
     def __init__(self, loss_func, is_vision_model, *args, **kwargs):
         if isinstance(kwargs["train_dataset"], DatasetDict):
@@ -93,7 +97,9 @@ class ContrastiveTrainer(Trainer):
             drop_last=self.args.dataloader_drop_last,
             generator=generator,
         )
-
+## MHU
+## The function is called for each batch during training to calculate the loss value that will be used for backpropagation. Use that loss to update the model parameters.
+## The model separates the query and document representations in the model embedding space, then pass them to the loss function to compute the loss
     def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):
         query_outputs = model(input_ids=inputs["query_input_ids"], attention_mask=inputs["query_attention_mask"])
         # feed only kwargs with 'doc_' prefix

@@ -122,7 +122,10 @@ class ColQwen2_5_Processor(BaseVisualRetrieverProcessor, Qwen2VLProcessor):  # n
         )
 
         return batch_query
-
+## MHU
+## The score function in your ColQwen2_5_Processor class is designed to compute similarity scores 
+# between query and passage embeddings (multi-vector representations).
+## It's used in Evaluation pipelines, or Retrieval benchmarks
     def score(
         self,
         qs: List[torch.Tensor],

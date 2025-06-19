@@ -73,6 +73,9 @@ class BaseVisualRetrieverProcessor(ABC, ProcessorMixin):
         scores = scores.to(torch.float32)
         return scores
 
+### MHU
+#  Example: one query has 8 tokens, one image has 1024 tokens, find out the most similar patch for each query token within 1024 tokens
+# (1, 1, 8) - best patch match for each of the 8 query tokens
     @staticmethod
     def score_multi_vector(
         qs: Union[torch.Tensor, List[torch.Tensor]],
@@ -120,6 +123,9 @@ class BaseVisualRetrieverProcessor(ABC, ProcessorMixin):
                 ps_batch = torch.nn.utils.rnn.pad_sequence(
                     ps[j : j + batch_size], batch_first=True, padding_value=0
                 ).to(device)
+### MHU
+### The similarity is calculated using this line: the MaxSim operation (ColBERT style): For each query token, find the maximum similarity across all passage tokens.
+### This computes the dot product between every query token embedding and every passage token embedding for all query-passage pairs in the batch
                 scores_batch.append(torch.einsum("bnd,csd->bcns", qs_batch, ps_batch).max(dim=3)[0].sum(dim=2))
             scores_batch = torch.cat(scores_batch, dim=1).cpu()
             scores_list.append(scores_batch)
