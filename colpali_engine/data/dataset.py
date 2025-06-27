@@ -90,7 +90,7 @@ class ColPaliEngineDataset(Dataset):
 
         # Column args
         self.query_column_name = query_column_name
-        self.pos_target_column_name = pos_target_column_name
+        self.pos_target_column_name = pos_target_column_name    ### MHU column name: image
         self.neg_target_column_name = neg_target_column_name
 
         assert isinstance(

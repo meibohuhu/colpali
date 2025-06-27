@@ -82,6 +82,7 @@ class ColModelTraining:
         self.current_git_hash = os.popen("git rev-parse HEAD").read().strip()
         self.train_dataset = self.config.train_dataset
         self.eval_dataset = self.config.eval_dataset
+        ### MHU The collator is the bridge between raw dataset samples and model-ready batches, handling padding, batching, and preprocessing for each training step.
         self.collator = VisualRetrieverCollator(
             processor=self.config.processor,
             max_length=self.config.max_length,
@@ -93,7 +94,7 @@ class ColModelTraining:
             train_dataset=self.train_dataset,
             eval_dataset=self.eval_dataset,
             args=self.config.tr_args,
-            data_collator=self.collator,
+            data_collator=self.collator, ### MHU VisualRetrieverCollator: The collator is the bridge between raw dataset samples and model-ready batches
             loss_func=self.config.loss_func,    ## MHU ### The ColbertLoss (or similar) is used to optimize the model for this objective.
             is_vision_model=self.config.processor is not None,
         )

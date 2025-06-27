@@ -57,6 +57,7 @@ class ColQwen2Processor(BaseVisualRetrieverProcessor, Qwen2VLProcessor):
 
         return instance
 
+#### MHU will be used to process images in collator(visual_retriever_collator.py)
     def process_images(self, images: List[Image.Image], context_prompts: Optional[List[str]] = None) -> BatchFeature:
         """
         Process images for ColQwen2.

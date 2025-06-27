@@ -48,9 +48,11 @@ class VisualRetrieverCollator:
             print("Setting padding side to right")
             self.processor.tokenizer.padding_side = "right"
 
+### MHU  the main function that processes a list of raw dataset samples into a single, model-ready batch
+###  self.auto_collate => collate_texts(processor.process_queries), collate_images(self.processor.process_images)
     def __call__(self, examples: List[Dict[str, Any]]) -> Dict[str, Any]:
         queries: List[Union[None, str, Image]] = []
-        pos_targets: List[Union[str, Image]] = []
+        pos_targets: List[Union[str, Image]] = []   ### Positive targets are images that are relevant or correct for the given query (e.g., the image that actually matches the query's content).
         neg_targets: List[Union[str, Image]] = []
 
         # Parse the examples.

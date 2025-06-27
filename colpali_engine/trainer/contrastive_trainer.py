@@ -15,7 +15,7 @@ def concat_all_gather(t: torch.Tensor) -> torch.Tensor:
 
 '''
 MHU
-Contrastive learning (not "constructive learning") is a training approach where the model learns to bring similar pairs 
+Contrastive learning is a training approach where the model learns to bring similar pairs 
 closer together and push dissimilar pairs further apart in the embedding space.
 '''
 class ContrastiveTrainer(Trainer):
@@ -97,7 +97,8 @@ class ContrastiveTrainer(Trainer):
             drop_last=self.args.dataloader_drop_last,
             generator=generator,
         )
-## MHU
+    
+## MHU  the model forward pass happens in compute_loss and prediction_step methods.
 ## The function is called for each batch during training to calculate the loss value that will be used for backpropagation. Use that loss to update the model parameters.
 ## The model separates the query and document representations in the model embedding space, then pass them to the loss function to compute the loss
     def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):

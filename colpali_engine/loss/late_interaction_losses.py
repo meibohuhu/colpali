@@ -146,7 +146,12 @@ class ColbertLoss(ColbertModule):
             Tensor: Scalar loss value.
         """
         lengths = (query_embeddings[:, :, 0] != 0).sum(dim=1)
+        ### MHU The raw score matrix is first computed
+        ### Diagonal (positive): positive pairs(query with its own doc/image)
+        ### Off-diagonal (negative): all other pairs in the batch 
+        ### [batch_size, batch_size, num_query_tokens, num_doc_tokens]).
         raw = torch.einsum("bnd,csd->bcns", query_embeddings, doc_embeddings)
+        ### MHU then reduces this 4D tensor to a 2D matrix [batch_size, batch_size]
         scores = self._aggregate(raw, self.use_smooth_max, dim_max=3, dim_sum=2)
 
         if self.normalize_scores:
